@@ -33,53 +33,130 @@ void ExecutePop(SourceCode& code, registers::CPU& regs) {
     - Rt can be SP only for word loads and word stores
     - Rt can be PC only for word loads.
   */
-
 void ExecuteLdr(SourceCode& code, registers::CPU& regs) {
   Byte operand = code[regs.R[constants::PC]++];
   Byte rt = code[regs.R[constants::PC]++];  // Specifies the register to load
   Byte rn = code[regs.R[constants::PC]++];  // Specifies the register on which the memory address is based.
 
+  Word offset = 0;
   if (operand == constants::OPERAND) {
-    Word offset = *(Word*)&code[regs.R[constants::PC]];
+    offset = *(Word*)&code[regs.R[constants::PC]];
     regs.R[constants::PC] += sizeof(Word);
-
-    auto ptr = (uint8_t*)regs.R[rn];
-    ptr += offset;
-
-    regs.R[rt] = *(Word*)ptr;
   }
   else if (operand == constants::REGISTER) {
     Byte rm = code[regs.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
-    Word offset = regs.R[rm];
-
-    auto ptr = (uint8_t*)regs.R[rn];
-    ptr += offset;
-
-    regs.R[rt] = *(Word*)ptr;
+    offset = regs.R[rm];
   }
+
+  auto ptr = (Byte*)regs.R[rn];
+  ptr += offset;
+  regs.R[rt] = *(Word*)ptr;
 }
+
+
+void ExecuteLdrh(SourceCode& code, registers::CPU& regs) {
+  Byte operand = code[regs.R[constants::PC]++];
+  Byte rt = code[regs.R[constants::PC]++];  // Specifies the register to load
+  Byte rn = code[regs.R[constants::PC]++];  // Specifies the register on which the memory address is based.
+
+  Word offset = 0;
+  if (operand == constants::OPERAND) {
+    offset = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[regs.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
+    offset = regs.R[rm];
+  }
+
+  auto ptr = (Byte*)regs.R[rn];
+  ptr += offset;
+  regs.R[rt] = *(HalfWord*)ptr;
+}
+
+
+void ExecuteLdrb(SourceCode& code, registers::CPU& regs) {
+  Byte operand = code[regs.R[constants::PC]++];
+  Byte rt = code[regs.R[constants::PC]++];  // Specifies the register to load
+  Byte rn = code[regs.R[constants::PC]++];  // Specifies the register on which the memory address is based.
+
+  Word offset = 0;
+  if (operand == constants::OPERAND) {
+    offset = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[regs.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
+    offset = regs.R[rm];
+  }
+
+  auto ptr = (Byte*)regs.R[rn];
+  ptr += offset;
+  regs.R[rt] = *(Byte*)ptr;
+}
+
 
 void ExecuteStr(SourceCode& code, registers::CPU& regs) {
   Byte operand = code[regs.R[constants::PC]++];
   Byte rt = code[regs.R[constants::PC]++];  // Specifies the register to store.
   Byte rn = code[regs.R[constants::PC]++];  // Specifies the register on which the memory address is based.
 
+  Word offset = 0;
   if (operand == constants::OPERAND) {
-    Word offset = *(Word*)&code[regs.R[constants::PC]];
+    offset = *(Word*)&code[regs.R[constants::PC]];
     regs.R[constants::PC] += sizeof(Word);
-
-    auto ptr = (uint8_t*)regs.R[rn];
-    ptr += offset;
-
-    *(Word*)ptr = regs.R[rt];
   }
   else if (operand == constants::REGISTER) {
     Byte rm = code[regs.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
-    Word offset = regs.R[rm];
-
-    auto ptr = (uint8_t*)regs.R[rn];
-    ptr += offset;
-
-    *(Word*)ptr = regs.R[rt];
+    offset = regs.R[rm];
   }
+
+  auto ptr = (Byte*)regs.R[rn];
+  ptr += offset;
+
+  *(Word*)ptr = (Word)regs.R[rt];
+}
+
+
+void ExecuteStrh(SourceCode& code, registers::CPU& regs) {
+  Byte operand = code[regs.R[constants::PC]++];
+  Byte rt = code[regs.R[constants::PC]++];  // Specifies the register to store.
+  Byte rn = code[regs.R[constants::PC]++];  // Specifies the register on which the memory address is based.
+
+  Word offset = 0;
+  if (operand == constants::OPERAND) {
+    offset = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[regs.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
+    offset = regs.R[rm];
+  }
+
+  auto ptr = (Byte*)regs.R[rn];
+  ptr += offset;
+
+  *(HalfWord*)ptr = (HalfWord)regs.R[rt];
+}
+
+
+void ExecuteStrb(SourceCode& code, registers::CPU& regs) {
+  Byte operand = code[regs.R[constants::PC]++];
+  Byte rt = code[regs.R[constants::PC]++];  // Specifies the register to store.
+  Byte rn = code[regs.R[constants::PC]++];  // Specifies the register on which the memory address is based.
+
+  Word offset = 0;
+  if (operand == constants::OPERAND) {
+    offset = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[regs.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
+    offset = regs.R[rm];
+  }
+
+  auto ptr = (Byte*)regs.R[rn];
+  ptr += offset;
+
+  *(Byte*)ptr = (Byte)regs.R[rt];
 }

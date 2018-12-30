@@ -10,7 +10,7 @@ void ParseInstruction(SourceCode& code, registers::CPU& regs) {
 
   switch (opCode)
   {
-  case constants::NOOP:
+  case constants::NOP:
     break;
   case constants::ADD:
     ExecuteAdd(code, regs);
@@ -60,8 +60,20 @@ void ParseInstruction(SourceCode& code, registers::CPU& regs) {
   case constants::LDR:
     ExecuteLdr(code, regs);
     break;
+  case constants::LDRH:
+    ExecuteLdrh(code, regs);
+    break;
+  case constants::LDRB:
+    ExecuteLdrb(code, regs);
+    break;
   case constants::STR:
     ExecuteStr(code, regs);
+    break;
+  case constants::STRH:
+    ExecuteStrh(code, regs);
+    break;
+  case constants::STRB:
+    ExecuteStrb(code, regs);
     break;
   default:
     break;

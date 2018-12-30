@@ -57,16 +57,17 @@ void ExecuteAnd(SourceCode& code, registers::CPU& regs) {
   Byte rd = code[regs.R[constants::PC]++];
   Byte rn = code[regs.R[constants::PC]++];
 
+  Word number = 0;
   if (operand == constants::OPERAND) {
-    Word number = *(Word*)&code[regs.R[constants::PC]];
+    number = *(Word*)&code[regs.R[constants::PC]];
     regs.R[constants::PC]  += sizeof(Word);
-
-    regs.R[rd] = regs.R[rn] && number;
   }
   else if (operand == constants::REGISTER) {
     Byte rm = code[regs.R[constants::PC]++];
-    regs.R[rd] = regs.R[rn] && regs.R[rm];
+    number = regs.R[rm];
   }
+
+  regs.R[rd] = regs.R[rn] & number;
 }
 
 void ExecuteEor(SourceCode& code, registers::CPU& regs) {
@@ -74,16 +75,17 @@ void ExecuteEor(SourceCode& code, registers::CPU& regs) {
   Byte rd = code[regs.R[constants::PC]++];
   Byte rn = code[regs.R[constants::PC]++];
 
+  Word number = 0;
   if (operand == constants::OPERAND) {
-    Word number = *(Word*)&code[regs.R[constants::PC]];
+    number = *(Word*)&code[regs.R[constants::PC]];
     regs.R[constants::PC]  += sizeof(Word);
-
-    regs.R[rd] = (bool)(regs.R[rn]) ^ bool(number);
   }
   else if (operand == constants::REGISTER) {
     Byte rm = code[regs.R[constants::PC]++];
-    regs.R[rd] = (bool)(regs.R[rn]) && (bool)(regs.R[rm]);
+    number = regs.R[rm];
   }
+
+  regs.R[rd] = regs.R[rn] ^ number;
 }
 
 void ExecuteOrr(SourceCode& code, registers::CPU& regs) {
@@ -91,16 +93,17 @@ void ExecuteOrr(SourceCode& code, registers::CPU& regs) {
   Byte rd = code[regs.R[constants::PC]++];
   Byte rn = code[regs.R[constants::PC]++];
 
+  Word number = 0;
   if (operand == constants::OPERAND) {
-    Word number = *(Word*)&code[regs.R[constants::PC]];
+    number = *(Word*)&code[regs.R[constants::PC]];
     regs.R[constants::PC]  += sizeof(Word);
-
-    regs.R[rd] = regs.R[rn] || number;
   }
   else if (operand == constants::REGISTER) {
     Byte rm = code[regs.R[constants::PC]++];
-    regs.R[rd] = regs.R[rn] || regs.R[rm];
+    number = regs.R[rm];
   }
+
+  regs.R[rd] = regs.R[rn] | number;
 }
 
 void ExecuteCmp(SourceCode& code, registers::CPU& regs) {

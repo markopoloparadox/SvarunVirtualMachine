@@ -59,6 +59,6 @@ void LoadCode() {
     if (i == EOF) {
       break;
     }
-    g_code.push_back(uint8_t(i));
+    g_code.push_back(Byte(i));
   }
 }

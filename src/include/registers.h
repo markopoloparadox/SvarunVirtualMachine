@@ -31,7 +31,7 @@ namespace registers {
 
   inline void DumpRegisters(CPU& regs) {
     std::cout << "General Registers: \n";
-    for (int i = 0; i < regs.R.size() - 2; i += 1) {
+    for (size_t i = 0; i < regs.R.size() - 2; i += 1) {
       std::cout << "R[" << i << "] = " << (int)regs.R[i] << "\n";
     }
 
