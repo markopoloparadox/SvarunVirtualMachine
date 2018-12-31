@@ -4,20 +4,20 @@
 
 void ExecutePush(SourceCode& code, registers::CPU& regs) {
   Byte operand = code[regs.R[constants::PC]++];
-
   regs.R[constants::SP] -= 4;
-  if (operand == constants::OPERAND) {
-    Word number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC] += sizeof(Word);
 
-    auto ptr = (Word*)regs.R[constants::SP];
-    *ptr = number;
+  Word number = 0;
+  if (operand == constants::OPERAND) {
+    number = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
   }
   else if (operand == constants::REGISTER) {
     Byte rn = code[regs.R[constants::PC]++];
-    auto ptr = (Word*)regs.R[constants::SP];
-    *ptr = regs.R[rn];
+    number = regs.R[rn];
   }
+
+  auto ptr = (Word*)regs.R[constants::SP];
+  *ptr = number;
 }
 
 void ExecutePop(SourceCode& code, registers::CPU& regs) {

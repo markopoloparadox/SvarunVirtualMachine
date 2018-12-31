@@ -42,8 +42,8 @@ void DumpStack() {
   std::cout << "Size: " << sizeInB << "B \n";
   std::cout << "Number of elements: " << sizeInB / sizeof(Word) << "\n";
   std::cout << "Elems: [ ";
-  for (int i = 0; i < sizeInB; i += 4) {
-    std::cout << *(Word*)&g_stack[STACK_BOTTOM - 4 - i] << " ";
+  for (int i = 0; i < sizeInB; i += 1) {
+    std::cout << (Word)g_stack[STACK_BOTTOM - 4 - i] << " ";
   }
 
   std::cout << "]\n" << std::endl;

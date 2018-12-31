@@ -1,6 +1,14 @@
 #include "Branch.h"
 
-void ExecuteIfeq(SourceCode& code, registers::CPU& regs) {
+void ExecuteJmp(SourceCode& code, registers::CPU& regs) {
+  Word location = *(Word*)&code[regs.R[constants::PC]];
+  regs.R[constants::PC] += sizeof(Word);
+
+  regs.R[constants::PC] = location;
+}
+
+
+void ExecuteJeq(SourceCode& code, registers::CPU& regs) {
   Word location = *(Word*)&code[regs.R[constants::PC]];
   regs.R[constants::PC]  += sizeof(Word);
 
@@ -9,7 +17,8 @@ void ExecuteIfeq(SourceCode& code, registers::CPU& regs) {
   }
 }
 
-void ExecuteIfne(SourceCode& code, registers::CPU& regs) {
+
+void ExecuteJne(SourceCode& code, registers::CPU& regs) {
   Word location = *(Word*)&code[regs.R[constants::PC]];
   regs.R[constants::PC]  += sizeof(Word);
 
@@ -18,7 +27,8 @@ void ExecuteIfne(SourceCode& code, registers::CPU& regs) {
   }
 }
 
-void ExecuteIflt(SourceCode& code, registers::CPU& regs) {
+
+void ExecuteJlt(SourceCode& code, registers::CPU& regs) {
   Word location = *(Word*)&code[regs.R[constants::PC]];
   regs.R[constants::PC]  += sizeof(Word);
 
@@ -27,7 +37,8 @@ void ExecuteIflt(SourceCode& code, registers::CPU& regs) {
   }
 }
 
-void ExecuteIfle(SourceCode& code, registers::CPU& regs) {
+
+void ExecuteJle(SourceCode& code, registers::CPU& regs) {
   Word location = *(Word*)&code[regs.R[constants::PC]];
   regs.R[constants::PC]  += sizeof(Word);
 
@@ -36,7 +47,8 @@ void ExecuteIfle(SourceCode& code, registers::CPU& regs) {
   }
 }
 
-void ExecuteIfgt(SourceCode& code, registers::CPU& regs) {
+
+void ExecuteJgt(SourceCode& code, registers::CPU& regs) {
   Word location = *(Word*)&code[regs.R[constants::PC]];
   regs.R[constants::PC]  += sizeof(Word);
 
@@ -45,7 +57,8 @@ void ExecuteIfgt(SourceCode& code, registers::CPU& regs) {
   }
 }
 
-void ExecuteIfge(SourceCode& code, registers::CPU& regs) {
+
+void ExecuteJge(SourceCode& code, registers::CPU& regs) {
   Word location = *(Word*)&code[regs.R[constants::PC]];
   regs.R[constants::PC]  += sizeof(Word);
 
