@@ -132,3 +132,58 @@ void ExecuteCmp(SourceCode& code, registers::CPU& regs) {
   regs.CPSR.ZF = regs.R[rn] == number;
   regs.CPSR.GF = regs.R[rn] > number;
 }
+
+void ExecuteMul(SourceCode& code, registers::CPU& regs) {
+  Byte operand = code[regs.R[constants::PC]++];
+  Byte rd = code[regs.R[constants::PC]++];
+  Byte rn = code[regs.R[constants::PC]++];
+
+  Word number = 0;
+  if (operand == constants::OPERAND) {
+    number = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[regs.R[constants::PC]++];
+    number = regs.R[rm];
+  }
+
+  regs.R[rd] = regs.R[rn] * number;
+}
+
+void ExecuteLsl(SourceCode& code, registers::CPU& regs) {
+  Byte operand = code[regs.R[constants::PC]++];
+  Byte rd = code[regs.R[constants::PC]++];
+  Byte rn = code[regs.R[constants::PC]++];
+
+  Word number = 0;
+  if (operand == constants::OPERAND) {
+    number = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[regs.R[constants::PC]++];
+    number = regs.R[rm];
+  }
+
+  regs.R[rd] = regs.R[rn] << number;
+}
+
+
+void ExecuteLsr(SourceCode& code, registers::CPU& regs) {
+  Byte operand = code[regs.R[constants::PC]++];
+  Byte rd = code[regs.R[constants::PC]++];
+  Byte rn = code[regs.R[constants::PC]++];
+
+  Word number = 0;
+  if (operand == constants::OPERAND) {
+    number = *(Word*)&code[regs.R[constants::PC]];
+    regs.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[regs.R[constants::PC]++];
+    number = regs.R[rm];
+  }
+
+  regs.R[rd] = regs.R[rn] >> number;
+}

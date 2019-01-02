@@ -8,3 +8,6 @@ void ExecuteAnd(SourceCode& code, registers::CPU& regs);
 void ExecuteEor(SourceCode& code, registers::CPU& regs);
 void ExecuteOrr(SourceCode& code, registers::CPU& regs);
 void ExecuteCmp(SourceCode& code, registers::CPU& regs);
+void ExecuteMul(SourceCode& code, registers::CPU& regs);
+void ExecuteLsl(SourceCode& code, registers::CPU& regs);
+void ExecuteLsr(SourceCode& code, registers::CPU& regs);

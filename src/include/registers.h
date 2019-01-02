@@ -21,9 +21,10 @@ namespace registers {
 
   struct CPU {
     CPU() {
-      R.resize(12, 0);
-      R[constants::SP] = 0;
+      R.resize(13, 0);
       R[constants::PC] = 0;
+      R[constants::SP] = 0;
+      R[constants::ZR] = 0;
     }
     std::vector<Word> R;      // General Registers
     Cpsr CPSR;                // Current Program Status Register        
