@@ -2,188 +2,124 @@
 #include "SvarunCommon/types.h"
 #include "SvarunCommon/constants.h"
 
-void ExecuteAdd(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteAdd(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC]  += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.R[rd] = regs.R[rn] + number;
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] + ins.value;
 }
 
 
-void ExecuteMov(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
+void ExecuteMov(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction1R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC]  += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rn = code[regs.R[constants::PC]++];
-    number = regs.R[rn];
-  }
-
-  regs.R[rd] = number;
+  cpu.R[ins.reg1] = ins.value;
 }
 
 
-void ExecuteSub(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteSub(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC]  += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.R[rd] = regs.R[rn] - number;
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] - ins.value;
 }
 
 
-void ExecuteAnd(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteAnd(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC]  += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.R[rd] = regs.R[rn] & number;
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] & ins.value;
 }
 
 
-void ExecuteEor(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteEor(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC]  += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.R[rd] = regs.R[rn] ^ number;
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] ^ ins.value;
 }
 
 
-void ExecuteOrr(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteOrr(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC]  += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.R[rd] = regs.R[rn] | number;
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] | ins.value;
 }
 
 
-void ExecuteCmp(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteCmp(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction1R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC]  += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.CPSR.ZF = regs.R[rn] == number;
-  regs.CPSR.GF = regs.R[rn] > number;
+  cpu.CPSR.ZF = cpu.R[ins.reg1] == ins.value;
+  cpu.CPSR.GF = cpu.R[ins.reg1] > ins.value;
 }
 
-void ExecuteMul(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteMul(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC] += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.R[rd] = regs.R[rn] * number;
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] * ins.value;
 }
 
-void ExecuteLsl(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteLsl(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC] += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
-
-  regs.R[rd] = regs.R[rn] << number;
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] << ins.value;
 }
 
 
-void ExecuteLsr(SourceCode& code, registers::CPU& regs) {
-  Byte operand = code[regs.R[constants::PC]++];
-  Byte rd = code[regs.R[constants::PC]++];
-  Byte rn = code[regs.R[constants::PC]++];
+void ExecuteLsr(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
 
-  Word number = 0;
-  if (operand == constants::OPERAND) {
-    number = *(Word*)&code[regs.R[constants::PC]];
-    regs.R[constants::PC] += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    Byte rm = code[regs.R[constants::PC]++];
-    number = regs.R[rm];
-  }
+  cpu.R[ins.reg1] = cpu.R[ins.reg2] >> ins.value;
+}
 
-  regs.R[rd] = regs.R[rn] >> number;
+/*
+  Load-Store rules:
+    - Rn must not be PC
+    - Rm must not be SP and must not be PC
+    - Rt can be SP only for word loads and word stores
+    - Rt can be PC only for word loads.
+  */
+void ExecuteLdr(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
+
+  Byte* ptr = (Byte*)cpu.R[ins.reg2] + ins.value;
+  cpu.R[ins.reg1] = *(Word*)ptr;
+}
+
+
+void ExecuteLdrh(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
+
+  Byte* ptr = (Byte*)cpu.R[ins.reg2] + ins.value;
+  cpu.R[ins.reg1] = *(HalfWord*)ptr;
+}
+
+
+void ExecuteLdrb(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
+
+  Byte* ptr = (Byte*)cpu.R[ins.reg2] + ins.value;
+  cpu.R[ins.reg1] = *(Byte*)ptr;
+}
+
+
+void ExecuteStr(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
+
+  Byte* ptr = (Byte*)cpu.R[ins.reg2] + ins.value;
+  *(Word*)ptr = (Word)cpu.R[ins.reg1];
+}
+
+
+void ExecuteStrh(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
+
+  Byte* ptr = (Byte*)cpu.R[ins.reg2] + ins.value;
+  *(HalfWord*)ptr = (Word)cpu.R[ins.reg1];
+}
+
+
+void ExecuteStrb(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
+
+  Byte* ptr = (Byte*)cpu.R[ins.reg2] + ins.value;
+  *(Byte*)ptr = (Word)cpu.R[ins.reg1];
 }

@@ -92,3 +92,34 @@ void ParseInstruction(SourceCode& code, registers::CPU& regs) {
     break;
   }
 }
+
+
+Instruction1R1O::Instruction1R1O(SourceCode& code, registers::CPU& cpu) {
+  operand = code[cpu.R[constants::PC]++];
+  reg1 = code[cpu.R[constants::PC]++];
+
+  if (operand == constants::OPERAND) {
+    value = *(Word*)&code[cpu.R[constants::PC]];
+    cpu.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[cpu.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
+    value = cpu.R[rm];
+  }
+}
+
+
+Instruction2R1O::Instruction2R1O(SourceCode& code, registers::CPU& cpu) {
+  operand = code[cpu.R[constants::PC]++];
+  reg1 = code[cpu.R[constants::PC]++];
+  reg2 = code[cpu.R[constants::PC]++];
+
+  if (operand == constants::OPERAND) {
+    value = *(Word*)&code[cpu.R[constants::PC]];
+    cpu.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    Byte rm = code[cpu.R[constants::PC]++]; //Specifies the register containing a value to be used as the offset.
+    value = cpu.R[rm];
+  }
+}
