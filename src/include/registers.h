@@ -38,6 +38,7 @@ namespace registers {
 
     std::cout << "PC = " << (int)regs.R[constants::PC] << "\n";
     std::cout << "SP = " << (int)regs.R[constants::SP] << "\n";
+    std::cout << "ZR = " << (int)regs.R[constants::ZR] << "\n";
     std::cout << "CPSR Z = " << (int)regs.CPSR.ZF << "\n";
     std::cout << "CPSR H = " << (int)regs.CPSR.GF << "\n" << std::endl;
   }

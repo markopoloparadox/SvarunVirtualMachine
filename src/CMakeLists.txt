@@ -7,7 +7,6 @@ set (
 	branch.cpp
 	dataprocessing.cpp
 	instruction.cpp
-	memory.cpp
 )
 ## Create project
 add_executable( ${PROJECT_NAME} ${Source})
