@@ -58,6 +58,30 @@ void ExecuteLsr(SourceCode& code, registers::CPU& cpu) {
 }
 
 
+void ExecuteStp(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R1O(code, cpu);
+
+  auto ptr = (Word*)(std::get<Byte*>(ins.value));
+  *ptr = cpu.R[ins.reg1.get()];
+  ptr += 1;
+  *ptr = cpu.R[ins.reg2.get()];
+}
+
+
+void ExecuteLdp(SourceCode& code, registers::CPU& cpu) {
+  auto ins = Instruction2R2O(code, cpu);
+
+  auto regPointer = std::get<Byte*>(ins.value1);
+  auto ptr = (Word*)regPointer;
+  cpu.R[ins.reg1.get()] = *ptr;
+  ptr += 1;
+  cpu.R[ins.reg2.get()] = *ptr;
+
+  auto increment = std::get<Word>(ins.value2);
+  *(Word*)regPointer += increment;
+}
+
+
 void ExecuteMov(SourceCode& code, registers::CPU& cpu) {
   auto ins = Instruction1R1O(code, cpu);
 

@@ -11,6 +11,9 @@ void ExecuteCmp(SourceCode& code, registers::CPU& cpu);
 void ExecuteMul(SourceCode& code, registers::CPU& cpu);
 void ExecuteLsl(SourceCode& code, registers::CPU& cpu);
 void ExecuteLsr(SourceCode& code, registers::CPU& cpu);
+void ExecuteStp(SourceCode& code, registers::CPU& cpu);
+// 
+void ExecuteLdp(SourceCode& code, registers::CPU& cpu);
 // LDR instructions load a register with a value from memory.
 void ExecuteLdr(SourceCode& code, registers::CPU& cpu);
 void ExecuteLdrh(SourceCode& code, registers::CPU& cpu);

@@ -82,8 +82,35 @@ void ParseInstruction(SourceCode& code, registers::CPU& regs) {
   case constants::LSR:
     ExecuteLsr(code, regs);
     break;
+  case constants::STP:
+    ExecuteStp(code, regs);
+    break;
+  case constants::LDP:
+    ExecuteLdp(code, regs);
+    break;
   default:
     break;
+  }
+}
+
+
+static void RetrieveOperand(Byte operand, std::variant<Word, Byte*>& value, SourceCode& code, registers::CPU& cpu) {
+  if (operand == constants::NUMBER) {
+    value = *(Word*)&code[cpu.R[constants::PC]];
+    cpu.R[constants::PC] += sizeof(Word);
+  }
+  else if (operand == constants::REGISTER) {
+    auto reg = types::Register(code[cpu.R[constants::PC]++]);
+    value = cpu.R[reg.get()];
+  }
+  else if (operand == constants::MEMORY) {
+    types::Memory mem = *(types::Memory*)&code[cpu.R[constants::PC]];
+    cpu.R[constants::PC] += sizeof(types::Memory);
+    value = (Byte*)cpu.R[mem.reg.get()] + mem.offset;
+
+    if (mem.flag) {
+      cpu.R[mem.reg.get()] += mem.offset;
+    }
   }
 }
 
@@ -92,23 +119,7 @@ Instruction1R1O::Instruction1R1O(SourceCode& code, registers::CPU& cpu) {
   reg1 = types::Register(code[cpu.R[constants::PC]++]);
   operand = code[cpu.R[constants::PC]++];
 
-  if (operand == constants::NUMBER) {
-    value = *(Word*)&code[cpu.R[constants::PC]];
-    cpu.R[constants::PC] += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    auto reg = types::Register(code[cpu.R[constants::PC]++]);
-    value = cpu.R[reg.get()];
-  }
-  else if (operand == constants::MEMORY) {
-    types::Memory mem = *(types::Memory*)&code[cpu.R[constants::PC]];
-    cpu.R[constants::PC] += sizeof(types::Memory);
-    value = (Byte*)cpu.R[mem.reg.get()] + mem.offset;
-
-    if (mem.flag) {
-      cpu.R[mem.reg.get()] += mem.offset;
-    }
-  }
+  RetrieveOperand(operand, value, code, cpu);
 }
 
 
@@ -117,22 +128,17 @@ Instruction2R1O::Instruction2R1O(SourceCode& code, registers::CPU& cpu) {
   reg2 = types::Register(code[cpu.R[constants::PC]++]);
   operand = code[cpu.R[constants::PC]++];
 
-  if (operand == constants::NUMBER) {
-    value = *(Word*)&code[cpu.R[constants::PC]];
-    cpu.R[constants::PC] += sizeof(Word);
-  }
-  else if (operand == constants::REGISTER) {
-    auto reg = types::Register(code[cpu.R[constants::PC]++]);
-    value = cpu.R[reg.get()];
-  }
-  else if (operand == constants::MEMORY) {
-    types::Memory mem = *(types::Memory*)&code[cpu.R[constants::PC]];
-    cpu.R[constants::PC] += sizeof(types::Memory);
-
-    value = (Byte*)cpu.R[mem.reg.get()] + mem.offset;
-
-    if (mem.flag) {
-      cpu.R[mem.reg.get()] += mem.offset;
-    }
-  }
+  RetrieveOperand(operand, value, code, cpu);
 }
+
+
+Instruction2R2O::Instruction2R2O(SourceCode& code, registers::CPU& cpu) {
+  reg1 = types::Register(code[cpu.R[constants::PC]++]);
+  reg2 = types::Register(code[cpu.R[constants::PC]++]);
+  operand1 = code[cpu.R[constants::PC]++];
+  RetrieveOperand(operand1, value1, code, cpu);
+
+  operand2 = code[cpu.R[constants::PC]++];
+  RetrieveOperand(operand2, value2, code, cpu);
+}
+
